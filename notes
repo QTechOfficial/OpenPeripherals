@@ -1,0 +1,23 @@
+Brightness
+==========
+Header: 04
+Checksum: 08 - 0d
+Pad?: 00
+Idk: 06
+??: 01
+Cmd: 01
+Pad?: 00
+Pad?: 00
+Brightness: 00 - 05
+
+Speed
+=====
+Header: 04
+Checksum: 09 - 0e
+Pad?: 00
+Idk: 06
+??: 01
+Cmd: 02
+Pad?: 00
+Pad?: 00
+Speed: 00 - 05
