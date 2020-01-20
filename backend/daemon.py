@@ -12,7 +12,7 @@ PID = 0x5004
 class Keyboard:
     '''
     <node>
-        <interface name='net.lew21.pydbus.TutorialExample'>
+        <interface name='com.qtech.openkeyboard.test.properties'>
             <method name='SetBrightness'>
                 <arg type='i' name='val' direction='in'/>
                 <arg type='s' name='response' direction='out'/>
