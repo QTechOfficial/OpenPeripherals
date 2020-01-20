@@ -3,10 +3,11 @@
 import sys
 from functools import partial
 
-import pydbus
 from PyQt5.QtCore import QRect, QObject, pyqtSlot
-from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QMessageBox, QPushButton
+from PyQt5.QtWidgets import QApplication, QPushButton
+from PyQt5.QtDBus import QDBusConnection, QDBusInterface
 from PyQt5.uic import loadUi
+
 
 class Keyboard(QObject):
     def __init__(self, parent=None):
@@ -17,20 +18,21 @@ class Keyboard(QObject):
 
         self.buttons = {}
 
-        self.bus = pydbus.SessionBus()
-        self.kb = self.bus.get('com.qtech.openkeyboard.test')
+        self.bus = QDBusConnection.sessionBus()
+        self.kb = QDBusInterface('com.qtech.openkeyboard.test', '/com/qtech/openkeyboard/test', 'com.qtech.openkeyboard.test.properties', QDBusConnection.sessionBus())
 
+    @pyqtSlot(str)
     def print_name(self, name):
         print(name)
 
     @pyqtSlot(int)
     def on_set_brightness(self, val):
-        self.kb.SetBrightness(val)
+        self.kb.call('SetBrightness', val)
 
     @pyqtSlot(int)
     def on_set_effect(self, val):
         print(val)
-        self.kb.SetEffect(val)
+        self.kb.call('SetEffect', val)
 
     def connect_buttons(self):
         self.ui.set_brightness.valueChanged.connect(self.on_set_brightness)
