@@ -4,9 +4,6 @@ import hid
 import time
 import colorsys
 
-vid = 0x0c45
-pid = 0x5004
-
 packet = [
     '04 01 00 01',
     '04 11 01 06 03 09 00 00 0000ff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
@@ -37,14 +34,14 @@ class RedDragon:
             cksum += dat
 
         self._hid.write(bytes([4, 1, 0, 1]))  # Start block
-        h.read(256, 10)
+        self._hid.read(256, 10)
         ledata = bytes([4, cksum & 0xFF, 0, cmd]) + data
-        print(len(ledata))
+        #print(len(ledata))
         #phex(ledata)
         self._hid.write(ledata)
-        h.read(256, 10)
+        self._hid.read(256, 10)
         self._hid.write(bytes([4, 2, 0, 2]))  # End block
-        h.read(256, 10)
+        self._hid.read(256, 10)
 
     def set_effect(self, val):
         # TODO: Check argument
@@ -79,7 +76,7 @@ class RedDragon:
 
 
 if __name__ == '__main__':
-    with hid.Device(path=b'/dev/hidraw1') as h:
+    with hid.Device(path=b'/dev/hidraw6') as h:
         print(f'Manufac: {h.manufacturer}')
         print(f'Prod: {h.product}')
         print(f'Ser: {h.serial}')
@@ -91,12 +88,12 @@ if __name__ == '__main__':
         #rd.set_some_color(255, 0, 0)
 
         for i in range(0x7D):
-            rd.set_color_data(i * 3, bytes([0, 0, 0]))
+            rd.set_color_data(i * 3, bytes([255, 0, 0]))
 
         time.sleep(2)
 
-        for i in range(0x7D):
-            rd.set_color_data(0x36*2, bytes([255 - int(i/0x7D*0xFF), 0, int(i/0x7D*0xFF)]*(i+1)))
+        #for i in range(0x7D):
+        #    rd.set_color_data(0x36*2, bytes([255 - int(i/0x7D*0xFF), 0, int(i/0x7D*0xFF)]*(i+1)))
             #time.sleep(0.1)
 
         #rd.set_some_color(255, 0, 0)

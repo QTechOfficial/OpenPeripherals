@@ -1,24 +1,41 @@
 #!/usr/bin/env python3
 
-from functools import partial
 import sys
-from PyQt5.QtCore import QRect, QMetaObject
+from functools import partial
+
+import pydbus
+from PyQt5.QtCore import QRect, QObject, pyqtSlot
 from PyQt5.QtWidgets import QApplication, QWidget, QDialog, QMessageBox, QPushButton
 from PyQt5.uic import loadUi
 
-class Keyboard(QWidget):
+class Keyboard(QObject):
     def __init__(self, parent=None):
-        QWidget.__init__(self, parent)
+        QObject.__init__(self, parent)
 
         self.ui = loadUi('./keyboard.ui')
         self.ui.show()
 
         self.buttons = {}
 
+        self.bus = pydbus.SessionBus()
+        self.kb = self.bus.get('com.qtech.openkeyboard.test')
+
     def print_name(self, name):
         print(name)
 
+    @pyqtSlot(int)
+    def on_set_brightness(self, val):
+        self.kb.SetBrightness(val)
+
+    @pyqtSlot(int)
+    def on_set_effect(self, val):
+        print(val)
+        self.kb.SetEffect(val)
+
     def connect_buttons(self):
+        self.ui.set_brightness.valueChanged.connect(self.on_set_brightness)
+        self.ui.set_effect.currentIndexChanged.connect(self.on_set_effect)
+
         for b in self.buttons.keys():
             button = self.buttons[b]
             button.clicked.connect(partial(self.print_name, b))
@@ -50,7 +67,7 @@ def main():
     kb.add_buttons()
     kb.connect_buttons()
 
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 
 if __name__ == "__main__":
