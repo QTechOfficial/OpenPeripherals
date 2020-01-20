@@ -1,0 +1,108 @@
+Brightness
+==========
+Header: 04
+Checksum: 08 - 0d
+Pad?: 00
+Idk: 06
+??: 01
+Cmd: 01
+Pad?: 00
+Pad?: 00
+Brightness: 00 - 05
+
+Speed
+=====
+Header: 04
+Checksum: 09 - 0e
+Pad?: 00
+Idk: 06
+??: 01
+Cmd: 02
+Pad?: 00
+Pad?: 00
+Speed: 00 - 05
+
+Direction
+=========
+Header: 04
+Checksum: 0a - 0b
+Pad?: 00
+Idk: 06
+??: 01
+Cmd: 03
+Pad?: 00
+Pad?: 00
+Dir: 00/01
+
+Colorful
+========
+Header: 04
+Checksum: 0b - 0c
+Pad?: 00
+Idk: 06
+??: 01
+Cmd: 04
+Pad?: 00
+Pad?: 00
+Colorful: 00/01
+
+Effect Color
+============
+Header: 04
+Checksum: a lot
+Pad?: 00 - 01  -- afaik only 0 when black
+Idk: 06
+??: 03
+Cmd: 05
+Pad?: 00
+Pad?: 00
+Red: 00 - ff  -- unknown steps
+Green: 00 - ff
+Blue: 00 - ff
+
+Set one key color
+=================
+Header: 04
+Checksum: ###
+Pad?: 01
+Idk: 11
+??: 03
+Cmd: 74
+Pad?: 01
+Pad?: 00
+Red: 00 - ff  -- unknown steps
+Green: 00 - ff
+Blue: 00 - ff
+
+Change Base Color
+=================
+- Start multi-packet frame?
+	04 01 00 01
+
+04 11 01 06 03 09 00 00 00 00 ff
+
+04 37 10 11 36 00 00 00 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 00 00 00 ff 00 00 ff 00 00 ff 00 00 00 00 00
+
+04 6e 0f 11 36 36 00 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00
+
+04 a1 12 11 36 6c 00 00 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00
+
+04 d7 12 11 36 a2 00 00 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00
+
+04 13 0d 11 36 d8 00 00 00 00 ff 00 00 ff 00 00 ff 00 00 00 00 00 ff 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 ff 00 00 ff 00 00 00 00 00 ff 00 00 00 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00
+
+04 47 0f 11 36 0e 01 00 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 00 00 00 ff 00 00 00 00 00 ff 00 00 00 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00
+
+04 81 0b 11 36 44 01 00 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 ff 00 00 ff 00 00 00 00 00 ff 00 00 ff 00 00 00 00 00
+
+04 c2 00 11 36 7a 01
+
+- End multi-packet frame?
+	40 02 00 02
+
+Lights on/off????
+04 2F 00 03 2C
+
+04 B4 03 04 2C 00 00 00 55 AA FF 02 45 0C 04 50
+07 01 00 18 00 00 00 00 01 02 03 04 05 06 07 08
+09 0A 0B 0C 0D 0E 0F 11 10 12 14
