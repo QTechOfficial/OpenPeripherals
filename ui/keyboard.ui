@@ -50,7 +50,7 @@
      <rect>
       <x>300</x>
       <y>260</y>
-      <width>79</width>
+      <width>138</width>
       <height>23</height>
      </rect>
     </property>
@@ -61,17 +61,17 @@
     </item>
     <item>
      <property name="text">
-      <string>Rainbow Spectrum</string>
+      <string>Spectrum</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Rainbow Wave</string>
+      <string>Wave</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Rainbow Circle</string>
+      <string>Circle</string>
      </property>
     </item>
     <item>
@@ -81,22 +81,22 @@
     </item>
     <item>
      <property name="text">
-      <string>Rainbow Breathing</string>
+      <string>Breathing</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Rainbow Center</string>
+      <string>Static Color</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Key Press</string>
+      <string>Key Fade</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Key Wave</string>
+      <string>Key Ripple</string>
      </property>
     </item>
     <item>
@@ -106,7 +106,7 @@
     </item>
     <item>
      <property name="text">
-      <string>Random Changing</string>
+      <string>Sparkle</string>
      </property>
     </item>
     <item>
@@ -121,12 +121,12 @@
     </item>
     <item>
      <property name="text">
-      <string>Triangles</string>
+      <string>Zig Zag</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Collision</string>
+      <string>Black Hole</string>
      </property>
     </item>
     <item>
@@ -136,17 +136,17 @@
     </item>
     <item>
      <property name="text">
-      <string>Color Wave</string>
+      <string>Bounce</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Solid Color</string>
+      <string>Static Pastel</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Rainbow Center Spectrum</string>
+      <string>Rainbow Center</string>
      </property>
     </item>
     <item>
