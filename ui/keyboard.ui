@@ -56,72 +56,107 @@
     </property>
     <item>
      <property name="text">
-      <string>New Item</string>
+      <string>Off</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>New Item</string>
+      <string>Rainbow Spectrum</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>New Item</string>
+      <string>Rainbow Wave</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>New Item</string>
+      <string>Rainbow Circle</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>New Item</string>
+      <string>Rainbow Fade</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>New Item</string>
+      <string>Rainbow Breathing</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>New Item</string>
+      <string>Rainbow Center</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>New Item</string>
+      <string>Key Press</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>New Item</string>
+      <string>Key Wave</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>New Item</string>
+      <string>Horizontal Lines</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>New Item</string>
+      <string>Random Changing</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>New Item</string>
+      <string>Random</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>New Item</string>
+      <string>Vertical Spectrum</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>New Item</string>
+      <string>Triangles</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Collision</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Worms</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Color Wave</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Solid Color</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Rainbow Center Spectrum</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Off</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Custom</string>
      </property>
     </item>
    </widget>
