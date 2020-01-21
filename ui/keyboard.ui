@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>771</width>
+    <width>868</width>
     <height>404</height>
    </rect>
   </property>
@@ -160,14 +160,27 @@
      </property>
     </item>
    </widget>
+   <widget class="QPushButton" name="set_color">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>240</y>
+      <width>40</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>771</width>
-     <height>20</height>
+     <width>868</width>
+     <height>19</height>
     </rect>
    </property>
   </widget>
