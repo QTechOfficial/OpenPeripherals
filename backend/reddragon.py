@@ -26,6 +26,8 @@ def phex(data):
 class RedDragon:
     def __init__(self, hid):
         self._hid = hid
+        self._brightness = 0
+        self._effect = 0
 
     def write_packet(self, cmd, data=bytes()):
         cksum = cmd
@@ -46,10 +48,20 @@ class RedDragon:
     def set_effect(self, val):
         # TODO: Check argument
         self.write_packet(6, bytes([1, 0, 0, 0, val]))
+        self._effect = val
+
+    def get_effect(self):
+        # TODO: Actually get from keyboard
+        return self._effect
 
     def set_brightness(self, val):
         # TODO: Check argument
         self.write_packet(6, bytes([1, 1, 0, 0, val]))
+        self._brightness = val
+
+    def get_brightness(self):
+        # TODO: Actually get from keyboard
+        return self._brightness
 
     def set_speed(self, val):
         # TODO: Check argument
