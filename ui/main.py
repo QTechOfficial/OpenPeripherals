@@ -8,6 +8,8 @@ from PyQt5.QtWidgets import QApplication, QPushButton, QColorDialog
 from PyQt5.QtDBus import QDBusConnection, QDBusInterface
 from PyQt5.uic import loadUi
 
+from color import Color
+
 class Keyboard(QObject):
     def __init__(self, parent=None):
         QObject.__init__(self, parent)
@@ -16,7 +18,8 @@ class Keyboard(QObject):
         self.ui.show()
 
         self.buttons = {}
-        self.active_color = [0, 0, 0]
+        self.active_color = Color(0, 0, 0)
+        self.effect_color = Color(0, 0, 0)
         self.color_dialog = QColorDialog()
 
         self.bus = QDBusConnection.sessionBus()
@@ -28,32 +31,28 @@ class Keyboard(QObject):
 
     @pyqtSlot(int)
     def on_set_effect(self, val):
-        print(val)
         self.kb.call('SetEffect', val)
 
     @pyqtSlot()
-    def open_color_dialog(self):
+    def open_color_dialog(self, button, color):
         dialog = self.color_dialog.getColor()
-        self.set_active_color(dialog.red(), dialog.green(), dialog.blue())
-        self.set_color(self.ui.set_color)
+        color.set(dialog.red(), dialog.green(), dialog.blue())
+        self.set_color(button, color)
 
-    def set_active_color(self, r, g, b):
-        self.active_color = [ r, g, b ]
-
-    def set_color(self, button):
-        col = self.active_color
-        color = f'rgb({col[0]}, {col[1]}, {col[2]})'
-        button.setStyleSheet('QPushButton { background-color: ' + color + ' }')
+    def set_color(self, button, color):
+        col = f'rgb({color.r}, {color.g}, {color.b})'
+        button.setStyleSheet('QPushButton { background-color: ' + col + ' }')
 
     def connect_buttons(self):
         self.ui.set_brightness.valueChanged.connect(self.on_set_brightness)
         self.ui.set_effect.currentIndexChanged.connect(self.on_set_effect)
 
-        self.ui.set_color.clicked.connect(self.open_color_dialog)
+        self.ui.set_color.clicked.connect(lambda: self.open_color_dialog(self.ui.set_color, self.active_color))
+        self.ui.set_effect_color.clicked.connect(lambda: self.open_color_dialog(self.ui.set_effect_color, self.effect_color))
 
         for b in self.buttons.keys():
             button = self.buttons[b]
-            button.clicked.connect(partial(self.set_color, self.buttons[b]))
+            button.clicked.connect(partial(self.set_color, self.buttons[b], self.active_color))
             button.show()
 
     def add_buttons(self):
@@ -64,8 +63,8 @@ class Keyboard(QObject):
 
                 name = item[0]
                 label = item[1]
-                x = int(item[2]) + 50
-                y = int(item[3]) + 50
+                x = int(item[2]) + 10
+                y = int(item[3]) + 10
                 w = int(item[4])
                 h = int(item[5])
 
