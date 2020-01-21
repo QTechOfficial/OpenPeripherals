@@ -34,9 +34,9 @@ class Keyboard(QObject):
         self.kb.call('SetEffect', val)
 
     @pyqtSlot()
-    def open_color_dialog(self, button, color):
-        dialog = self.color_dialog.getColor()
-        color.set(dialog.red(), dialog.green(), dialog.blue())
+    def color_button(self, button, color):
+        col = self.color_dialog.getColor()
+        color.set(col.red(), col.green(), col.blue())
         self.set_color(button, color)
 
     def set_color(self, button, color):
@@ -47,12 +47,12 @@ class Keyboard(QObject):
         self.ui.set_brightness.valueChanged.connect(self.on_set_brightness)
         self.ui.set_effect.currentIndexChanged.connect(self.on_set_effect)
 
-        self.ui.set_color.clicked.connect(lambda: self.open_color_dialog(self.ui.set_color, self.active_color))
-        self.ui.set_effect_color.clicked.connect(lambda: self.open_color_dialog(self.ui.set_effect_color, self.effect_color))
+        self.ui.set_color.clicked.connect(partial(self.color_button, self.ui.set_color, self.active_color))
+        self.ui.set_effect_color.clicked.connect(partial(self.color_button, self.ui.set_effect_color, self.effect_color))
 
         for b in self.buttons.keys():
             button = self.buttons[b]
-            button.clicked.connect(partial(self.set_color, self.buttons[b], self.active_color))
+            button.clicked.connect(partial(self.color_button, button, self.active_color))
             button.show()
 
     def add_buttons(self):
