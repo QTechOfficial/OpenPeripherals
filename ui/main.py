@@ -10,6 +10,7 @@ from PyQt5.QtDBus import QDBusConnection, QDBusInterface
 from PyQt5.uic import loadUi
 
 from color import Color
+from key import Key
 
 class Keyboard(QObject):
     DBUS_SERVICE = 'com.qtech.openkeyboard'
@@ -44,6 +45,11 @@ class Keyboard(QObject):
 
         return devices
 
+    @staticmethod
+    def set_button_color(button, color):
+        col = f'rgb({color.r}, {color.g}, {color.b})'
+        button.setStyleSheet('QPushButton { background-color: ' + col + ' }')
+
     @pyqtSlot(int)
     def on_set_brightness(self, val):
         self.kb_leds.call('SetBrightness', val)
@@ -52,30 +58,38 @@ class Keyboard(QObject):
     def on_set_effect(self, val):
         self.kb_leds.call('SetEffect', val)
 
-    @pyqtSlot()
-    def color_button(self, button, color):
-        col = self.color_dialog.getColor()
-        color.set(col.red(), col.green(), col.blue())
-        self.set_color(button, color)
+    @pyqtSlot(str, Color)
+    def set_key_color(self, button_id, color):
+        self.kb_leds.call('SetKeyColor', self.buttons[button_id].led_offset, color.r, color.g, color.b)
+        self.set_button_color(self.buttons[button_id].button, color)
 
-    def set_color(self, button, color):
-        col = f'rgb({color.r}, {color.g}, {color.b})'
-        button.setStyleSheet('QPushButton { background-color: ' + col + ' }')
+    @pyqtSlot()
+    def on_change_primary_color(self):
+        col = self.color_dialog.getColor()
+        self.active_color.set(col.red(), col.green(), col.blue())
+        self.set_button_color(self.ui.set_color, self.active_color)
+
+    @pyqtSlot()
+    def on_change_effect_color(self):
+        col = self.color_dialog.getColor()
+        self.effect_color.set(col.red(), col.green(), col.blue())
+        self.set_button_color(self.ui.set_effect_color, self.effect_color)
+        self.kb_leds.call('SetEffectColor', self.effect_color.r, self.effect_color.g, self.effect_color.b)
 
     def connect_buttons(self):
         self.ui.set_brightness.valueChanged.connect(self.on_set_brightness)
         self.ui.set_effect.currentIndexChanged.connect(self.on_set_effect)
 
-        self.ui.set_color.clicked.connect(partial(self.color_button, self.ui.set_color, self.active_color))
-        self.ui.set_effect_color.clicked.connect(partial(self.color_button, self.ui.set_effect_color, self.effect_color))
+        self.ui.set_color.clicked.connect(self.on_change_primary_color)
+        self.ui.set_effect_color.clicked.connect(self.on_change_effect_color)
 
-        for b in self.buttons.keys():
-            button = self.buttons[b]
-            button.clicked.connect(partial(self.color_button, button, self.active_color))
+        for button_id in self.buttons.keys():
+            button = self.buttons[button_id].button
+            button.clicked.connect(partial(self.set_key_color, button_id, self.active_color))
             button.show()
 
     def add_buttons(self):
-        with open('reddragon.ini', 'r') as keyfile:
+        with open('reddragon.def', 'r') as keyfile:
             lines = keyfile.readlines()
             for line in lines:
                 item = line.split(',')
@@ -86,12 +100,13 @@ class Keyboard(QObject):
                 y = int(item[3]) + 10
                 w = int(item[4])
                 h = int(item[5])
+                led_offset = int(item[6])
 
                 button = QPushButton(self.ui.buttons)
                 button.setObjectName("key_" + name)
                 button.setGeometry(QRect(x, y, w, h))
                 button.setText(label)
-                self.buttons[name] = button
+                self.buttons[name] = Key(name, button, led_offset)
 
 def main():
     app = QApplication(sys.argv)
