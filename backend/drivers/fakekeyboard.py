@@ -53,4 +53,4 @@ class FakeKeyboard:
 
     def set_color_data(self, offset, data):
         # TODO: Check argument
-        self.write_packet(0x11, bytes([len(data), offset & 0x00FF, offset >> 8 & 0x00FF, 0]) + data)
+        pass
