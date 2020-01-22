@@ -1,2 +1,2 @@
-# OpenKeyboard
-Open source driver for controlling keyboards with special features such as RGB.
+# OpenPeripherals
+Open source driver for controlling peripherals with special features such as RGB.
