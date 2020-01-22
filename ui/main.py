@@ -117,7 +117,7 @@ class Keyboard(QObject):
                 self.buttons[name] = Key(name, button, led_offset)
 
 
-def main():
+if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     kb = Keyboard()
@@ -125,7 +125,3 @@ def main():
     kb.connect_buttons()
 
     sys.exit(app.exec())
-
-
-if __name__ == "__main__":
-    main()

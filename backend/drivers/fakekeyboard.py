@@ -54,3 +54,7 @@ class FakeKeyboard:
     def set_color_data(self, offset, data):
         # TODO: Check argument
         pass
+
+    def get_all_colors(self):
+        # TODO: Impliment
+        pass

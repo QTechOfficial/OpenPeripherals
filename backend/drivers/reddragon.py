@@ -1,5 +1,6 @@
 from pprint import pprint as pp
 from random import randint
+from struct import unpack_from
 import hid
 import time
 import colorsys
@@ -85,13 +86,42 @@ class RedDragon:
         # TODO: Check argument
         self.write_packet(0x11, bytes([len(data), offset & 0x00FF, offset >> 8 & 0x00FF, 0]) + data)
 
-    def get_color_data(self, offset=0x00, size=0x36):
+    def get_color_data(self, size=0x36, offset=0x00):
         # TODO: Check argument
         resp = self.write_packet(0x10, bytes([size, offset & 0x00FF, offset >> 8 & 0x00FF, 0]))
-        phex(resp)
+        # Hidapi seems to be bad at freeing things or something because a bunch of garbage gets tacked on to the
+        # end of the responses. I just cut out the parts that are valid based on the size argument.
+        colors_raw = resp[8:8+size]
+        return colors_raw
 
     def set_some_color(self, r, g, b):
         self.write_packet(6, bytes([3, 9, 0, 0, r, g, b]))
+
+    def get_all_colors(self):
+        colors = {}
+
+        # Temporary - Horrible garbage for testing
+        keys = ['ESC', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', '<BLANK>', 'PRTSC', 'SCLK', 'PAUSE', '<BLANK>', '<BLANK>', '<BLANK>', '<BLANK>']
+        keys += ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'BACKSP', 'INS', 'HOME', 'PGUP', '<BLANK>', '<BLANK>', '<BLANK>', '<BLANK>']
+        keys += ['TAB', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', '\\', 'DEL', 'END', 'PGDN', '<BLANK>', '<BLANK>', '<BLANK>', '<BLANK>']
+        keys += ['CAPS', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', '\'', 'RETURN']
+        keys += ['SHIFT', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'RSHIFT', '<BLANK>', '<BLANK>', '<BLANK>', '<BLANK>']
+        # keys += ['ESC', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', '<BLANK>', 'PRTSC', 'SCLK', 'PAUSE']
+        colors = []
+
+        colors_raw = self.get_color_data(0x36, 0x00)
+        colors_raw += self.get_color_data(0x36, 0x36)
+        colors_raw += self.get_color_data(0x36, 0x6C)
+        colors_raw += self.get_color_data(0x36, 0xA2)
+        colors_raw += self.get_color_data(0x36, 0xD8)
+        colors_raw += self.get_color_data(0x36, 0x10E)
+        colors_raw += self.get_color_data(0x36, 0x144)
+        phex(colors_raw)
+
+        for i in range(0, len(colors_raw), 3):
+            colors.append(colors_raw[i:i+3])
+
+        return dict(zip(keys, colors[:len(keys)]))
 
 
 if __name__ == '__main__':
