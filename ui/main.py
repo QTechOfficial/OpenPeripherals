@@ -98,13 +98,14 @@ class Keyboard(QObject):
     def add_buttons(self):
         with open('reddragon.def', 'r') as keyfile:
             lines = keyfile.readlines()
+
             for line in lines:
                 item = line.split(',')
 
                 name = item[0]
                 label = item[1]
-                x = int(item[2]) + 10
-                y = int(item[3]) + 10
+                x = int(item[2])
+                y = int(item[3])
                 w = int(item[4])
                 h = int(item[5])
                 led_offset = int(item[6])

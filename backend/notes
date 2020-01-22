@@ -66,13 +66,54 @@ Header: 04
 Checksum: ###
 Pad?: 01
 Idk: 11
-??: 03
-Cmd: 74
-Pad?: 01
+Len: 03
+OffsetL: 74
+OffsetH: 01
 Pad?: 00
 Red: 00 - ff  -- unknown steps
 Green: 00 - ff
 Blue: 00 - ff
+
+Get layout data?
+================
+Header: 04
+Checksum: ##
+Pad?: 00
+Idk: 0f
+Len: 38
+OffsetL: 00
+OffsetH: 00
+Pad?: 00
+??????????
+
+Things to figure out:
+0f len offl offh 00
+0f len offl offh 00 ????(378 bytes)
+
+03 len offl offh 00 * off is 0
+03 len offl offh 00 ????(44 bytes) *called twice?
+
+07 len offl offh 00
+07 len offl offh 00 ????(1134 bytes)
+
+09 len offl offh 00 * off is 0
+09 len offl offh 00 ????(16 bytes) *called twice?
+
+03 len offl offh 00 * off is 0
+03 len offl offh 00 ????(44 bytes) *called once?
+
+04 01 00 01
+
+10 len offl offh 00
+10 len offl offh 00 r g b...(378 bytes) *key colors
+
+05 len offl offh 00
+05 len offl offh 00 ????(140 bytes)
+
+04 02 00 02
+
+
+
 
 Change Base Color
 =================

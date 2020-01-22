@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="buttons">
+  <widget class="QWidget" name="centralwidget">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -197,6 +197,16 @@
     </property>
     <property name="text">
      <string>All</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="buttons" native="true">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>621</width>
+      <height>171</height>
+     </rect>
     </property>
    </widget>
   </widget>

@@ -41,9 +41,11 @@ class RedDragon:
         #print(len(ledata))
         #phex(ledata)
         self._hid.write(ledata)
-        self._hid.read(256, 10)
+        resp = self._hid.read(256, 10)
         self._hid.write(bytes([4, 2, 0, 2]))  # End block
         self._hid.read(256, 10)
+
+        return resp
 
     def set_effect(self, val):
         # TODO: Check argument
@@ -82,6 +84,11 @@ class RedDragon:
     def set_color_data(self, offset, data):
         # TODO: Check argument
         self.write_packet(0x11, bytes([len(data), offset & 0x00FF, offset >> 8 & 0x00FF, 0]) + data)
+
+    def get_color_data(self, offset=0x00, size=0x36):
+        # TODO: Check argument
+        resp = self.write_packet(0x10, bytes([size, offset & 0x00FF, offset >> 8 & 0x00FF, 0]))
+        phex(resp)
 
     def set_some_color(self, r, g, b):
         self.write_packet(6, bytes([3, 9, 0, 0, r, g, b]))
