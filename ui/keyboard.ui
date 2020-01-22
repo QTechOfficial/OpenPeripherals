@@ -186,6 +186,19 @@
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="set_all">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>210</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>All</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
