@@ -65,6 +65,11 @@ class Keyboard(QObject):
         self.set_button_color(self.buttons[button_id].button, color)
 
     @pyqtSlot()
+    def on_set_all(self):
+        for button_id in self.buttons.keys():
+            self.set_key_color(button_id, self.active_color)
+
+    @pyqtSlot()
     def on_change_primary_color(self):
         col = self.color_dialog.getColor()
         self.active_color.set(col.red(), col.green(), col.blue())
@@ -83,6 +88,7 @@ class Keyboard(QObject):
 
         self.ui.set_color.clicked.connect(self.on_change_primary_color)
         self.ui.set_effect_color.clicked.connect(self.on_change_effect_color)
+        self.ui.set_all.clicked.connect(self.on_set_all)
 
         for button_id in self.buttons.keys():
             button = self.buttons[button_id].button
