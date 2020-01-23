@@ -24,33 +24,52 @@ def phex(data):
     print(' '.join([hex(d) for d in data]))
 
 
+class Commands:
+    START_BLOCK = 0x01
+    END_BLOCK = 0x02
+    SOME_DATA = 0x03
+    MORE_DATA = 0x04
+    GET_PROPERTY = 0x05
+    SET_PROPERTY = 0x06
+    READ_HELLA_DATA = 0x07
+    WRITE_HELLA_DATA = 0x08
+    SMALLER_DATA = 0x09
+    DATA_10_BYTES = 0x0A
+    GET_KEY_COLORS = 0x10
+    SET_KEY_COLORS = 0x11
+
+
+class Properties:
+    EFFECT = 0x00
+    BRIGHTNESS = 0x01
+    SPEED = 0x02
+    DIRECTION = 0x03
+    RAINBOW = 0x04
+    EFFECT_COLOR = 0x05
+
+
 class RedDragon:
     def __init__(self, hid):
         self._hid = hid
         self._brightness = 0
         self._effect = 0
 
-    def write_packet(self, cmd, data=bytes()):
+    def write_packet(self, cmd, data):
         cksum = cmd
 
         for dat in data:
             cksum += dat
 
-        self._hid.write(bytes([4, 1, 0, 1]))  # Start block
-        self._hid.read(256, 10)
-        ledata = bytes([4, cksum & 0xFF, 0, cmd]) + data
-        #print(len(ledata))
-        #phex(ledata)
-        self._hid.write(ledata)
-        resp = self._hid.read(256, 10)
-        self._hid.write(bytes([4, 2, 0, 2]))  # End block
-        self._hid.read(256, 10)
+        self._hid.write(bytes([4, cksum & 0xFF, 0, cmd] + data))
 
-        return resp
+        return self._hid.read(128, 10)
+
+    def set_property(self, prop_id, *values):
+        self.write_packet(Commands.SET_PROPERTY, [1, prop_id, 0, 0] + values)
 
     def set_effect(self, val):
         # TODO: Check argument
-        self.write_packet(6, bytes([1, 0, 0, 0, val]))
+        self.write_packet(Commands.SET_PROPERTY, bytes([1, 0, 0, 0, val]))
         self._effect = val
 
     def get_effect(self):
@@ -122,6 +141,7 @@ class RedDragon:
             colors.append(colors_raw[i:i+3])
 
         return dict(zip(keys, colors[:len(keys)]))
+
 
 
 if __name__ == '__main__':
