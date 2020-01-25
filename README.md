@@ -14,6 +14,10 @@
 
 <h3 align="center">An open source program to control your peripherals written in Python.</h3>
 
+<!-- 
+Screenshots will go here!
+--!>
+
 OpenPeripherals is an open source driver and frontend for controlling peripherals with special features such as RGB that aims to replace and unify 3rd party software into a crossplatform, easy to use interface.
 
 Currently OpenPeripherals only supports Linux, but Windows support is currently being worked on.
@@ -46,7 +50,7 @@ To install, simply clone the repository using git.
 If your device is not on here, please submit a pull request!
 
 **Supported devices:**
-- Reddragon
+- Redragon
   * K556
   * K552
 
@@ -55,6 +59,3 @@ If your device is not on here, please submit a pull request!
 
 **Currently unsupported devices:**
 - ASUS Aura (USB)
-
-## Screenshots:
-TODO: Make screenshots
