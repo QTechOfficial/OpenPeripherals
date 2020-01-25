@@ -1,5 +1,6 @@
-from backend.daemon import KbDaemon 
+from backend.daemon import KbDaemon
 
 class TestClass:
     def test(self):
-        assert True
+        kb = KbDaemon()
+        assert kb.logger
