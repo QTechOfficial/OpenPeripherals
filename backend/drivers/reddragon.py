@@ -113,9 +113,9 @@ class RedDragon:
     def get_rainbow(self):
         return self.get_property(Properties.RAINBOW)[0] == 1
 
-    def set_effect_color(self, color):
+    def set_effect_color(self, r, g, b):
         # TODO: Check argument
-        self.set_property(Properties.EFFECT_COLOR, *color)
+        self.set_property(Properties.EFFECT_COLOR, r, g, b)
 
     def get_effect_color(self):
         return self.get_property(Properties.EFFECT_COLOR, 3)
@@ -129,20 +129,18 @@ class RedDragon:
         resp = self.write_packet(Commands.GET_KEY_COLORS, size, offset)
         return resp
 
-    def set_key_color(self, key_id, color):
+    def set_key_color(self, key_id, r, g, b):
         # TODO: TEMP
         magic_dict = {}
-        self.set_color_data(magic_dict[key_id], color)
+        self.set_color_data(magic_dict[key_id], (r, g, b))
 
     def get_key_color(self, key_id):
         # TODO: TEMP
         magic_dict = {}
         return self.get_color_data(3, magic_dict[key_id])
 
-
     # TODO: Find out what this actually does
     def set_some_color(self, r, g, b):
-        # TODO: Check to see if the 3 is important, if not, switch to set_property
         self.set_property(Properties.SOME_COLOR, r, g, b)
 
     def get_some_color(self):
@@ -179,68 +177,3 @@ class RedDragon:
             colors.append(colors_raw[i:i+3])
 
         return dict(zip(keys, colors[:len(keys)]))
-
-
-
-if __name__ == '__main__':
-    with hid.Device(path=b'/dev/hidraw6') as h:
-        print(f'Manufac: {h.manufacturer}')
-        print(f'Prod: {h.product}')
-        print(f'Ser: {h.serial}')
-
-        rd = RedDragon(h)
-
-        # TODO: If only there was some kind of testing framework I could use instead of this shit... Hmmm
-        print('Effects')
-        for i in range(15):
-            rd.set_effect(i)
-            print(i, rd.get_effect() == i)
-            time.sleep(0.1)
-
-        print('Brightness')
-        for i in range(6):
-            rd.set_brightness(i)
-            print(i, rd.get_brightness() == i)
-            time.sleep(0.1)
-
-        print('Speed')
-        for i in range(6):
-            rd.set_speed(i)
-            print(i, rd.get_speed() == i)
-            time.sleep(0.1)
-
-        print('Direction')
-        rd.set_direction(True)
-        time.sleep(0.1)
-        print(rd.get_direction() == True)
-        rd.set_direction(False)
-        time.sleep(0.1)
-        print(rd.get_direction() == False)
-
-        print('Rainbow')
-        rd.set_rainbow(True)
-        time.sleep(0.1)
-        print(rd.get_rainbow() == True)
-        rd.set_rainbow(False)
-        time.sleep(0.1)
-        print(rd.get_rainbow() == False)
-
-        print('Effect Color')
-        rd.set_effect_color(255, 0, 0)
-        time.sleep(0.1)
-        print(rd.get_effect_color() == (255, 0, 0))
-        rd.set_effect_color(0, 255, 0)
-        time.sleep(0.1)
-        print(rd.get_effect_color() == (0, 255, 0))
-        rd.set_effect_color(0, 0, 255)
-        time.sleep(0.1)
-        print(rd.get_effect_color() == (0, 0, 255))
-
-        print('Color Data')
-        rd.set_effect(0x14)
-        rd.set_color_data(0, [255, 0, 0, 0, 255, 0, 0, 0, 255])
-        print(rd.get_color_data(9, 0) == (255, 0, 0, 0, 255, 0, 0, 0, 255))
-
-        print('Some Color')
-        rd.set_some_color(255, 0, 0)
-        print(rd.get_some_color() == (255, 0, 0))

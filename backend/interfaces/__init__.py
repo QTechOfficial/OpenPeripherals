@@ -41,18 +41,26 @@ class KeyboardInterface:
                 <arg type='b' name='rainbow' direction='out' />
             </method>
             <method name='SetEffectColor'>
-                <arg type='(iii)' name='color' direction='in' />
+                <arg type='i' name='r' direction='in' />
+                <arg type='i' name='g' direction='in' />
+                <arg type='i' name='b' direction='in' />
             </method>
             <method name='GetEffectColor'>
-                <arg type='(iii)' name='color' direction='out' />
+                <arg type='i' name='r' direction='out' />
+                <arg type='i' name='g' direction='out' />
+                <arg type='i' name='b' direction='out' />
             </method>
             <method name='SetKeyColor'>
                 <arg type='s' name='idx' direction='in' />
-                <arg type='(iii)' name='color' direction='in' />
+                <arg type='i' name='r' direction='in' />
+                <arg type='i' name='g' direction='in' />
+                <arg type='i' name='b' direction='in' />
             </method>
             <method name='GetKeyColor'>
                 <arg type='s' name='idx' direction='in' />
-                <arg type='(iii)' name='color' direction='out' />
+                <arg type='i' name='r' direction='out' />
+                <arg type='i' name='g' direction='out' />
+                <arg type='i' name='b' direction='out' />
             </method>
             <method name='SetAllColors'>
                 <arg type='a{s(iii)}' name='colors' direction='in' />
@@ -97,14 +105,14 @@ class KeyboardInterface:
     def GetRainbow(self):
         return self._kb.get_rainbow()
 
-    def SetEffectColor(self, color):
-        self._kb.set_effect_color(color)
+    def SetEffectColor(self, r, g, b):
+        self._kb.set_effect_color(r, g, b)
 
     def GetEffectColor(self):
         return self._kb.get_effect_color()
 
-    def SetKeyColor(self, idx, color):
-        self._kb.set_key_color(idx, color)
+    def SetKeyColor(self, idx, r, g, b):
+        self._kb.set_key_color(idx, r, g, b)
 
     def GetKeyColor(self, idx):
         return self._kb.get_key_color(idx)
