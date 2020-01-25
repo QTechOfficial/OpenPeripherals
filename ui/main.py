@@ -7,7 +7,6 @@ from xml.etree import ElementTree
 from PyQt5.QtCore import QRect, QObject, pyqtSlot
 from PyQt5.QtWidgets import QApplication, QPushButton, QColorDialog
 from PyQt5.QtDBus import QDBusConnection, QDBusInterface
-from PyQt5.QtGui import QPalette, QColor
 from PyQt5.uic import loadUi
 
 from color import Color

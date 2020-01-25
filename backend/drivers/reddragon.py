@@ -113,9 +113,9 @@ class RedDragon:
     def get_rainbow(self):
         return self.get_property(Properties.RAINBOW)[0] == 1
 
-    def set_effect_color(self, r, g, b):
+    def set_effect_color(self, color):
         # TODO: Check argument
-        self.set_property(Properties.EFFECT_COLOR, r, g, b)
+        self.set_property(Properties.EFFECT_COLOR, *color)
 
     def get_effect_color(self):
         return self.get_property(Properties.EFFECT_COLOR, 3)
@@ -129,6 +129,17 @@ class RedDragon:
         resp = self.write_packet(Commands.GET_KEY_COLORS, size, offset)
         return resp
 
+    def set_key_color(self, key_id, color):
+        # TODO: TEMP
+        magic_dict = {}
+        self.set_color_data(magic_dict[key_id], color)
+
+    def get_key_color(self, key_id):
+        # TODO: TEMP
+        magic_dict = {}
+        return self.get_color_data(3, magic_dict[key_id])
+
+
     # TODO: Find out what this actually does
     def set_some_color(self, r, g, b):
         # TODO: Check to see if the 3 is important, if not, switch to set_property
@@ -136,6 +147,10 @@ class RedDragon:
 
     def get_some_color(self):
         return self.get_property(Properties.SOME_COLOR, 3)
+
+    def set_all_colors(self, color):
+        # TODO: Implement
+        pass
 
     def get_all_colors(self):
         colors = {}
