@@ -33,6 +33,7 @@ class Keyboard(QObject):
         tmp = self.get_devices()[0]
         print(f'Using service {tmp}')
         self.kb_leds = QDBusInterface(self.DBUS_SERVICE, self.DBUS_PATH + '/' + tmp, self.DBUS_INT_LEDS, self.bus)
+        self.pull_settings()
 
     def get_devices(self):
         devices = []
@@ -44,6 +45,20 @@ class Keyboard(QObject):
                 devices.append(child.attrib['name'])
 
         return devices
+
+    def pull_settings(self):
+        effect = self.kb_leds.call('GetEffect').arguments()[0]
+        brightness = self.kb_leds.call('GetBrightness').arguments()[0]
+        speed = self.kb_leds.call('GetSpeed').arguments()[0]
+        direction = self.kb_leds.call('GetDirection').arguments()[0]
+        rainbow = self.kb_leds.call('GetRainbow').arguments()[0]
+        effect_color = self.kb_leds.call('GetEffectColor').arguments()
+        key_colors = self.kb_leds.call('GetAllColors').arguments()[0]
+
+        self.ui.set_effect.setCurrentIndex(effect)
+        self.ui.set_brightness.setValue(brightness)
+        self.effect_color = Color(*effect_color)
+        self.set_button_color(self.ui.set_effect_color, Color(*effect_color))
 
     @staticmethod
     def set_button_color(button, color):
