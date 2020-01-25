@@ -1,3 +1,17 @@
+TODO: Update packet structure now that I actually know what it is
+
+Effect
+======
+Header: 04
+Checksum: 08 - 0d
+Pad?: 00
+Idk: 06
+??: 01
+Cmd: 00
+Pad?: 00
+Pad?: 00
+Brightness: 00 - 05
+
 Brightness
 ==========
 Header: 04

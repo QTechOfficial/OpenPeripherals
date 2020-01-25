@@ -6,6 +6,7 @@ class FakeKeyboard:
         self._direction = False
         self._rainbow = False
         self._effect_color = (0, 0, 0)
+        self._colors = {}
 
     def set_effect(self, val):
         # TODO: Check argument
@@ -44,13 +45,22 @@ class FakeKeyboard:
     def get_rainbow(self):
         return self._rainbow
 
-    def set_effect_color(self, r, g, b):
+    def set_effect_color(self, color):
         # TODO: Check argument
-        self._effect_color = (r, g, b)
+        self._effect_color = color
 
     def get_effect_color(self):
         return self._effect_color
 
-    def set_color_data(self, offset, data):
+    def set_key_color(self, key_id, data):
         # TODO: Check argument
-        pass
+        self._colors[key_id] = data
+
+    def get_key_color(self, key_id):
+        return self._colors[key_id]
+
+    def set_all_colors(self, colors):
+        self._colors = colors
+
+    def get_all_colors(self):
+        return self._colors
