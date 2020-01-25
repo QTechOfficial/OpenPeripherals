@@ -16,7 +16,7 @@
 
 <!-- 
 Screenshots will go here!
---!>
+-->
 
 OpenPeripherals is an open source driver and frontend for controlling peripherals with special features such as RGB that aims to replace and unify 3rd party software into a crossplatform, easy to use interface.
 
