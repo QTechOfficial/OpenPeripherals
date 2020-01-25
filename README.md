@@ -1,6 +1,5 @@
-<h1 align="center">OpenPeripherals</h1>
 <p align="center">
-  <img src="https://i.imgur.com/cncTaNN.png" alt="Logo"></img>
+  <img src="https://i.imgur.com/CyxC7a4.jpg" alt="Logo"></img>
 </p>
 
 <p align="center">
@@ -15,15 +14,15 @@
 
 <h3 align="center">An open source program to control your peripherals written in Python.</h3>
 
-OpenPeripherals is an open source driver and frontend for controlling peripherals with special features such as RGB.
-OpenPeripherals aims to replace and unify 3rd party software into a crossplatform, easy to use interface.
-Currently OpenPeripherals supports Linux, but Windows support is currently being worked on.
+OpenPeripherals is an open source driver and frontend for controlling peripherals with special features such as RGB that aims to replace and unify 3rd party software into a crossplatform, easy to use interface.
 
+Currently OpenPeripherals only supports Linux, but Windows support is currently being worked on.
 
 ## Getting Started
 ### Linux:
 
 **Dependencies:**
+
 If you are on Linux, you will need to acquire the following packages from your package manager:
 - python (v3.6+)
 - pip for python3
@@ -40,4 +39,22 @@ In addition, you will need the following packages from pip:
 
 **Installation:**
 To install, simply clone the repository using git.
+
 `git clone https://github.com/QTechOfficial/OpenPeripherals.git`
+
+## Hardware Support
+If your device is not on here, please submit a pull request!
+
+**Supported devices:**
+- Reddragon
+  * K556
+  * K552
+
+**WIP devices:**
+- ASUS Aura (SMBus only)
+
+**Currently unsupported devices:**
+- ASUS Aura (USB)
+
+## Screenshots:
+TODO: Make screenshots
