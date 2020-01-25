@@ -50,7 +50,7 @@ class Keyboard(QObject):
     def get_all_colors(self, key_colors):
         for key_id in key_colors.keys():
             color = key_colors[key_id]
-            self.set_key_color(key_id, Color(color[0], color[1], color[2]))
+            self.on_set_key_color(key_id, Color(color[0], color[1], color[2]))
 
     @pyqtSlot(int)
     def on_set_brightness(self, val):
@@ -61,14 +61,21 @@ class Keyboard(QObject):
         self.kb_leds.call('SetEffect', val)
 
     @pyqtSlot(str, Color)
-    def set_key_color(self, key_id, color):
+    def on_set_key_color(self, key_id, color):
         self.kb_leds.call('SetKeyColor', self.keys[key_id].led_offset, color.r, color.g, color.b)
         self.keys[key_id].set_color(color)
 
     @pyqtSlot()
     def on_set_all(self):
         for key_id in self.keys.keys():
-            self.set_key_color(key_id, self.active_color)
+            self.on_set_key_color(key_id, self.active_color)
+
+    def on_get_all(self):
+        keys = {}
+        for key_id in self.keys.keys():
+            color = self.keys[key_id].color
+            keys[key_id] = (color.r, color.g, color.b)
+        return keys
 
     @pyqtSlot()
     def on_change_primary_color(self):
@@ -93,7 +100,7 @@ class Keyboard(QObject):
 
         for key_id in self.keys.keys():
             button = self.keys[key_id].button
-            button.clicked.connect(partial(self.set_key_color, key_id, self.active_color))
+            button.clicked.connect(partial(self.on_set_key_color, key_id, self.active_color))
             button.show()
 
     def add_buttons(self):
