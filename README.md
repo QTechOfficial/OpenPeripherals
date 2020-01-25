@@ -4,7 +4,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/github/license/QTechOfficial/OpenPeripherals" alt="License">
-  <img src="https://img.shields.io/travis/QTechOfficial/OpenPeripherals" alt="Build Status">
+  <img src="https://img.shields.io/travis/QTechOfficial/OpenPeripherals/master" alt="Build Status">
   <img src="https://img.shields.io/github/release-date/QTechOfficial/OpenPeripherals" alt="Release">
   <br>
   <img src="https://img.shields.io/github/contributors/QTechOfficial/OpenPeripherals" alt="Contributors">
@@ -27,19 +27,20 @@ Currently OpenPeripherals only supports Linux, but Windows support is currently 
 
 **Dependencies:**
 
-You will need the following packages from your distro's package manager:
-- python (v3.6+)
-- pip for python3
+You will need to run the following commands to download the dependencies:
 
-| **Distro**    | **Command**                            |
-|---------------|----------------------------------------|
-| Ubuntu/Debian | `sudo apt install python3 python3-pip` |
-| Arch/Manjaro  | `sudo pacman -S python python-pip`     |
+| **Distro**    | **Command**                                          |
+|---------------|------------------------------------------------------|
+| Debian/Ubuntu | `sudo apt install python3 python3-pip libhidapi-dev` |
+| Arch/Manjaro  | `sudo pacman -S python python-pip hidapi`            |
 
-In addition, you will need the following packages from pip:
-- hidapi
-- pyqt5
-- pydbus
+After those have installed, install the pip packages by running:
+
+| **Distro**                 | **Command**                        |
+|----------------------------|------------------------------------|
+| Debian ≥ 9/Ubuntu ≥ 18.04  | `pip install -r requirements.txt`  |
+| Debian < 9/Ubuntu < 18.04  | `pip3 install -r requirements.txt` |
+| Latest Arch/Latest Manjaro | `pip install -r requirements.txt`  |
 
 **Installation:**
 To install, simply clone the repository using git.
