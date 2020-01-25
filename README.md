@@ -23,7 +23,7 @@ Currently OpenPeripherals only supports Linux, but Windows support is currently 
 
 **Dependencies:**
 
-If you are on Linux, you will need to acquire the following packages from your package manager:
+You will need the following packages from your distro's package manager:
 - python (v3.6+)
 - pip for python3
 
