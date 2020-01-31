@@ -74,10 +74,12 @@ class RedDragon:
 
     def set_speed(self, speed):
         # TODO: Check argument
-        self.set_property(Properties.SPEED, speed)
+        # What the RedDragon called speed is actually delay between frames, so flip the range from 0-5 to 5-0
+        self.set_property(Properties.SPEED, 5 - speed)
 
     def get_speed(self):
-        return self.get_property(Properties.SPEED)[0]
+        # What the RedDragon called speed is actually delay between frames, so flip the range from 0-5 to 5-0
+        return 5 - self.get_property(Properties.SPEED)[0]
 
     def set_direction(self, direction):
         # TODO: Check argument
