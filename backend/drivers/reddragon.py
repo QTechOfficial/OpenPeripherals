@@ -1,25 +1,3 @@
-from pprint import pprint as pp
-from random import randint
-from struct import unpack_from
-import hid
-import time
-import colorsys
-
-packet = [
-    '04 01 00 01',
-    '04 11 01 06 03 09 00 00 0000ff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-    '04 37 10 11 36 00 00 00 0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000000000ff0000ff0000ff0000000000',
-    '04 6e 0f 11 36 36 00 00 0000000000000000000000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff00ffff0000ff0000',
-    '04 a1 12 11 36 6c 00 00 0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ffff00ff0000ff0000',
-    '04 d7 12 11 36 a2 00 00 0000ff00ffff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff0000ff00ffff0000ff0000',
-    '04 13 0d 11 36 d8 00 00 0000ff0000ff0000ff0000000000ff0000000000000000000000ff0000ff0000ff0000000000ff0000000000ff0000ffff00ff0000ff0000',
-    '04 47 0f 11 36 0e 01 00 0000ff0000ff0000ff0000ff0000ff0000ff0000000000ff0000000000ff0000000000ff0000ff0000ff0000ff0000ff0000ff0000ff0000',
-    '04 81 0b 11 36 44 01 00 0000ff0000ff0000ff0000ff0000ff0000ff0000000000000000000000000000000000ff0000ff0000ff0000000000ff00ffff0000000000',
-    '04 c2 00 11 36 7a 01 00 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-    '04 02 00 02',
-]
-
-
 def phex(data):
     print(' '.join([hex(d) for d in data]))
 
@@ -35,6 +13,7 @@ class Commands:
     WRITE_HELLA_DATA = 0x08
     SMALLER_DATA = 0x09
     DATA_10_BYTES = 0x0A
+    POSSIBLY_LAYOUT = 0x0F
     GET_KEY_COLORS = 0x10
     SET_KEY_COLORS = 0x11
 
@@ -52,6 +31,7 @@ class Properties:
 class RedDragon:
     def __init__(self, hid):
         self._hid = hid
+        self.magic_dict = {'ESCAPE': 0, 'F1': 3, 'F2': 6, 'F3': 9, 'F4': 12, 'F5': 15, 'F6': 18, 'F7': 21, 'F8': 24, 'F9': 27, 'F10': 30, 'F11': 33, 'F12': 36, 'PRTSC': 42, 'SCLK': 45, 'PAUSE': 48, 'GRAVE': 63, '1': 66, '2': 69, '3': 72, '4': 75, '5': 78, '6': 81, '7': 84, '8': 87, '9': 90, '0': 93, 'MINUS': 96, 'EQUALS': 99, 'BACK': 102, 'INSERT': 105, 'HOME': 108, 'PGUP': 111, 'TAB': 126, 'Q': 129, 'W': 132, 'E': 135, 'R': 138, 'T': 141, 'Y': 144, 'U': 147, 'I': 150, 'O': 153, 'P': 156, 'LBRACKET': 159, 'RBRACKET': 162, 'RETURN': 228, 'DEL': 168, 'END': 171, 'PGDN': 174, 'CAPSLK': 189, 'A': 192, 'S': 195, 'D': 198, 'F': 201, 'G': 204, 'H': 207, 'J': 210, 'K': 213, 'L': 216, 'SEMICOLON': 219, 'APOSTROPHE': 222, 'BACKSLASH': 165, 'SHIFT': 252, 'Z': 258, 'X': 261, 'C': 264, 'V': 267, 'B': 270, 'N': 273, 'M': 276, 'COMMA': 279, 'PERIOD': 282, 'SLASH': 285, 'RSHIFT': 291, 'CONTROL': 315, 'META': 318, 'ALT': 321, 'SPACE': 324, 'RALT': 327, 'FN': 330, 'APP': 333, 'RCONTROL': 339, 'NUMLOCK': 114, 'NUMSLASH': 117, 'NUMSTAR': 120, 'NUMMINUS': 123, 'NUM7': 177, 'NUM8': 180, 'NUM9': 183, 'NUM4': 240, 'NUM5': 243, 'NUM6': 246, 'NUMPLUS': 186, 'NUM1': 303, 'NUM2': 306, 'NUM3': 309, 'NUM0': 369, 'NUMPERIOD': 372, 'NUMENTER': 312, 'UP': 297, 'LEFT': 357, 'DOWN': 360, 'RIGHT': 363}
 
     def write_packet(self, cmd, size=1, offset=0, *data):
         cksum = cmd
@@ -61,7 +41,7 @@ class RedDragon:
 
         # Packet structure: [Header(4), Checksum, Padding?, Command, Size, OffsetL, OffsetH, Padding(0), ...]
         self._hid.write(bytes([4, cksum & 0xFF, 0, cmd, size, offset & 0x00FF, offset >> 8 & 0x00FF, 0] + list(data)))
-        resp = self._hid.read(128, 10)
+        resp = self._hid.read(128, 100)
         # Hidapi seems to be bad at freeing things or something because a bunch of garbage gets tacked on to the
         # end of the responses. I just cut out the parts that are valid based on the size argument.
         resp_len = resp[4]
@@ -130,14 +110,10 @@ class RedDragon:
         return resp
 
     def set_key_color(self, key_id, r, g, b):
-        # TODO: TEMP
-        magic_dict = {}
-        self.set_color_data(magic_dict[key_id], (r, g, b))
+        self.set_color_data(self.magic_dict[key_id], (r, g, b))
 
     def get_key_color(self, key_id):
-        # TODO: TEMP
-        magic_dict = {}
-        return self.get_color_data(3, magic_dict[key_id])
+        return self.get_color_data(3, self.magic_dict[key_id])
 
     # TODO: Find out what this actually does
     def set_some_color(self, r, g, b):
@@ -146,21 +122,26 @@ class RedDragon:
     def get_some_color(self):
         return self.get_property(Properties.SOME_COLOR, 3)
 
-    def set_all_colors(self, color):
-        # TODO: Implement
-        pass
+    def set_all_colors(self, colors):
+        color_data = [0] * 0x17A  # Fill the entire region with zeros
+        for key_id, color in colors.items():
+            key_offset = self.magic_dict[key_id]
+            color_data[key_offset:key_offset+3] = color
+
+        # Break the color data into chunks of length 0x36
+        chunks = []
+        for i in range(0, len(color_data), 0x36):
+            chunks.append(color_data[i:i + 0x36])
+
+        # Send each chunk to the keyboard
+        self.write_packet(Commands.START_BLOCK)
+        for i, chunk in enumerate(chunks):
+            chunk_len = len(chunk)
+            self.set_color_data(i * chunk_len, chunk)
+        self.write_packet(Commands.END_BLOCK)
 
     def get_all_colors(self):
         colors = {}
-
-        # Temporary - Horrible garbage for testing
-        keys = ['ESC', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', '<BLANK>', 'PRTSC', 'SCLK', 'PAUSE', '<BLANK>', '<BLANK>', '<BLANK>', '<BLANK>']
-        keys += ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'BACKSP', 'INS', 'HOME', 'PGUP', '<BLANK>', '<BLANK>', '<BLANK>', '<BLANK>']
-        keys += ['TAB', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', '\\', 'DEL', 'END', 'PGDN', '<BLANK>', '<BLANK>', '<BLANK>', '<BLANK>']
-        keys += ['CAPS', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', '\'', 'RETURN']
-        keys += ['SHIFT', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'RSHIFT', '<BLANK>', '<BLANK>', '<BLANK>', '<BLANK>']
-        # keys += ['ESC', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', '<BLANK>', 'PRTSC', 'SCLK', 'PAUSE']
-        colors = []
 
         self.write_packet(Commands.START_BLOCK)
         colors_raw = self.get_color_data(0x36, 0x00)
@@ -173,7 +154,7 @@ class RedDragon:
         self.write_packet(Commands.END_BLOCK)
         phex(colors_raw)
 
-        for i in range(0, len(colors_raw), 3):
-            colors.append(colors_raw[i:i+3])
+        for key_id, offset in self.magic_dict.items():
+            colors[key_id] = tuple(colors_raw[offset:offset+3])
 
-        return dict(zip(keys, colors[:len(keys)]))
+        return colors

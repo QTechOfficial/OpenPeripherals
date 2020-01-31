@@ -1,7 +1,7 @@
 class DaemonInterface:
     '''
     <node>
-        <interface name='com.qtech.openkeyboard'>
+        <interface name='com.qtech.openperipherals'>
         </interface>
     </node>
     '''
@@ -9,7 +9,7 @@ class DaemonInterface:
 class KeyboardInterface:
     '''
     <node>
-        <interface name='com.qtech.openkeyboard.Leds'>
+        <interface name='com.qtech.openperipherals.Leds'>
             <method name='SetEffect'>
                 <arg type='i' name='effect' direction='in' />
             </method>

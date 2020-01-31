@@ -13,6 +13,10 @@ PID = 0x5004
 
 
 class KbDaemon:
+    DBUS_PATH = '/com/qtech/openperipherals'
+    DBUS_SERVICE = 'com.qtech.openperipherals'
+    DBUS_INT_LEDS = DBUS_SERVICE + '.Leds'
+
     def __init__(self):
         # Logging
         self.logger = logging.getLogger('daemon')
@@ -28,8 +32,8 @@ class KbDaemon:
 
     def start(self):
         try:
-            self.bus.request_name('com.qtech.openkeyboard')
-            self.bus.register_object('/com/qtech/openkeyboard', DaemonInterface(), None)
+            self.bus.request_name(self.DBUS_SERVICE)
+            self.bus.register_object(self.DBUS_PATH, DaemonInterface(), None)
         except RuntimeError:
             self.logger.exception('Failed to connect to DBus')
             exit()
@@ -41,11 +45,11 @@ class KbDaemon:
         if kb_info is not None:
             self.logger.info(f'Connecting to keyboard at {kb_info["path"]}')
             rd = RedDragon(Device(path=kb_info['path']))
-            self.bus.register_object(f'/com/qtech/openkeyboard/{kb_info["manufacturer_string"]}', KeyboardInterface(rd), None)
+            self.bus.register_object(self.DBUS_PATH + f'/{kb_info["manufacturer_string"]}', KeyboardInterface(rd), None)
         else:
             self.logger.info(f'Creating fake keyboard')
             fake = FakeKeyboard()
-            self.bus.register_object('/com/qtech/openkeyboard/fake', KeyboardInterface(fake), None)
+            self.bus.register_object(self.DBUS_PATH + '/fake', KeyboardInterface(fake), None)
 
         # Start main loop
         GLib.MainLoop().run()

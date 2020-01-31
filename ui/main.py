@@ -4,20 +4,20 @@ import sys
 from functools import partial
 from xml.etree import ElementTree
 
+from pydbus import SessionBus
+
 from PyQt5.QtCore import QRect, QObject, pyqtSlot
 from PyQt5.QtWidgets import QApplication, QPushButton, QColorDialog
-from PyQt5.QtDBus import QDBusConnection, QDBusInterface
 from PyQt5.uic import loadUi
 
 from utils import set_button_color
-from objects.color import Color
-from objects.key import Key
+from color import Color
+from key import Key
 
 class Keyboard(QObject):
-    DBUS_SERVICE = 'com.qtech.openkeyboard'
+    DBUS_PATH = '/com/qtech/openperipherals'
+    DBUS_SERVICE = 'com.qtech.openperipherals'
     DBUS_INT_LEDS = DBUS_SERVICE + '.Leds'
-    DBUS_PATH = '/com/qtech/openkeyboard'
-    DBUS_PROPERTIES = 'org.freedesktop.DBus.Properties'
 
     def __init__(self, parent=None):
         QObject.__init__(self, parent)
@@ -30,17 +30,16 @@ class Keyboard(QObject):
         self.effect_color = Color(255, 255, 255)
         self.color_dialog = QColorDialog()
 
-        self.bus = QDBusConnection.sessionBus()
+        self.bus = SessionBus()
         tmp = self.get_devices()[0]
         print(f'Using service {tmp}')
-        self.kb_leds = QDBusInterface(self.DBUS_SERVICE, self.DBUS_PATH + '/' + tmp, self.DBUS_INT_LEDS, self.bus)
-        self.pull_settings()
+        self.kb_leds = self.bus.get(self.DBUS_SERVICE, self.DBUS_PATH + f'/{tmp}')
 
     def get_devices(self):
         devices = []
 
-        interface = QDBusInterface(self.DBUS_SERVICE, self.DBUS_PATH, 'org.freedesktop.DBus.Introspectable', self.bus)
-        xml_str = interface.call('Introspect').arguments()[0]
+        service = self.bus.get(self.DBUS_SERVICE)
+        xml_str = service.Introspect()
         for child in ElementTree.fromstring(xml_str):
             if child.tag == 'node':
                 devices.append(child.attrib['name'])
@@ -48,48 +47,42 @@ class Keyboard(QObject):
         return devices
 
     def pull_settings(self):
-        effect = self.kb_leds.call('GetEffect').arguments()[0]
-        brightness = self.kb_leds.call('GetBrightness').arguments()[0]
-        speed = self.kb_leds.call('GetSpeed').arguments()[0]
-        direction = self.kb_leds.call('GetDirection').arguments()[0]
-        rainbow = self.kb_leds.call('GetRainbow').arguments()[0]
-        effect_color = self.kb_leds.call('GetEffectColor').arguments()
-        key_colors = self.kb_leds.call('GetAllColors').arguments()[0]
+        effect = self.kb_leds.GetEffect()
+        brightness = self.kb_leds.GetBrightness()
+        speed = self.kb_leds.GetSpeed()
+        direction = self.kb_leds.GetDirection()
+        rainbow = self.kb_leds.GetRainbow()
+        effect_color = self.kb_leds.GetEffectColor()
+        key_colors = self.kb_leds.GetAllColors()
 
         self.ui.set_effect.setCurrentIndex(effect)
         self.ui.set_brightness.setValue(brightness)
         self.effect_color = Color(*effect_color)
         set_button_color(self.ui.set_effect_color, Color(*effect_color))
-
-    def get_all_colors(self, key_colors):
-        for key_id in key_colors.keys():
-            color = key_colors[key_id]
-            self.on_set_key_color(key_id, Color(color[0], color[1], color[2]))
+        for key_id, color in key_colors.items():
+            self.keys[key_id].set_color(Color(*color))
 
     @pyqtSlot(int)
     def on_set_brightness(self, val):
-        self.kb_leds.call('SetBrightness', val)
+        self.kb_leds.SetBrightness(val)
 
     @pyqtSlot(int)
     def on_set_effect(self, val):
-        self.kb_leds.call('SetEffect', val)
+        self.kb_leds.SetEffect(val)
 
     @pyqtSlot(str, Color)
     def on_set_key_color(self, key_id, color):
-        self.kb_leds.call('SetKeyColor', self.keys[key_id].led_offset, color.r, color.g, color.b)
+        self.kb_leds.SetKeyColor(key_id, color.r, color.g, color.b)
         self.keys[key_id].set_color(color)
 
     @pyqtSlot()
     def on_set_all(self):
-        for key_id in self.keys.keys():
-            self.on_set_key_color(key_id, self.active_color)
+        color_data = {}
+        for key_id, key in self.keys.items():
+            set_button_color(key.button, self.active_color)
+            color_data[key_id] = (self.active_color.r, self.active_color.g, self.active_color.b)
 
-    def on_get_all(self):
-        keys = {}
-        for key_id in self.keys.keys():
-            color = self.keys[key_id].color
-            keys[key_id] = (color.r, color.g, color.b)
-        return keys
+        self.kb_leds.SetAllColors(color_data)
 
     @pyqtSlot()
     def on_change_primary_color(self):
@@ -102,7 +95,7 @@ class Keyboard(QObject):
         col = self.color_dialog.getColor()
         self.effect_color.set(col.red(), col.green(), col.blue())
         set_button_color(self.ui.set_effect_color, self.effect_color)
-        self.kb_leds.call('SetEffectColor', self.effect_color.r, self.effect_color.g, self.effect_color.b)
+        self.kb_leds.SetEffectColor(self.effect_color.r, self.effect_color.g, self.effect_color.b)
 
     def connect_buttons(self):
         self.ui.set_brightness.valueChanged.connect(self.on_set_brightness)
@@ -144,5 +137,6 @@ if __name__ == "__main__":
     kb = Keyboard()
     kb.add_buttons()
     kb.connect_buttons()
+    kb.pull_settings()
 
     sys.exit(app.exec())
