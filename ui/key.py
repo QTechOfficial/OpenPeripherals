@@ -1,4 +1,4 @@
-from objects.color import Color
+from color import Color
 from utils import set_button_color
 
 class Key:
