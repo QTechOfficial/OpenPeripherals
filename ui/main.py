@@ -119,11 +119,11 @@ class Keyboard(QObject):
         col = self.color_dialog.getColor()
         self.effect_color = (col.red(), col.green(), col.blue())
         set_button_color(self.ui.set_effect_color, self.effect_color)
-        self.kb_leds.SetEffectColor(self.effect_color[0], self.effect_color[1], self.effect_color[2])
+        self.kb_leds.SetEffectColor(self.effect_color)
 
     @pyqtSlot(str, tuple)
     def on_set_key_color(self, key_id):
-        self.kb_leds.SetKeyColor(key_id, self.active_color[0], self.active_color[1], self.active_color[2])
+        self.kb_leds.SetKeyColor(key_id, self.active_color)
         self.keys[key_id].set_color(self.active_color)
 
     def connect_buttons(self):

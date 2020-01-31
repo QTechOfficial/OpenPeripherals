@@ -37,23 +37,23 @@ class TestKeyboard:
         assert self.kb.get_rainbow() == False,'Failed to set rainbow to False'
 
     def test_colors(self):
-        self.kb.set_effect_color(255, 0, 0)
+        self.kb.set_effect_color((255, 0, 0))
         assert self.kb.get_effect_color() == (255, 0, 0),'Failed to set color to 255, 0, 0'
         
-        self.kb.set_effect_color(0, 255, 0)
+        self.kb.set_effect_color((0, 255, 0))
         assert self.kb.get_effect_color() == (0, 255, 0),'Failed to set color to 0, 255, 0'
 
-        self.kb.set_effect_color(0, 0, 255) 
+        self.kb.set_effect_color((0, 0, 255))
         assert self.kb.get_effect_color() == (0, 0, 255),'Failed to set color to 0, 0, 255'
     
     def test_key_color(self):
-        self.kb.set_key_color('A', 255, 0, 0)
+        self.kb.set_key_color('A', (255, 0, 0))
         assert self.kb.get_key_color('A') == (255, 0, 0),'Failed to set key color to 255, 0, 0'
 
-        self.kb.set_key_color('A', 0, 255, 0)
+        self.kb.set_key_color('A', (0, 255, 0))
         assert self.kb.get_key_color('A') == (0, 255, 0),'Failed to set key color to 0, 255, 0'
 
-        self.kb.set_key_color('A', 0, 0, 255)
+        self.kb.set_key_color('A', (0, 0, 255))
         assert self.kb.get_key_color('A') == (0, 0, 255),'Failed to set key color to 0, 0, 255'
 
     def test_key_color_all(self):
