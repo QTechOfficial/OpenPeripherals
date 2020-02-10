@@ -5,8 +5,8 @@ def phex(data):
 class Commands:
     START_BLOCK = 0x01
     END_BLOCK = 0x02
-    SOME_DATA = 0x03
-    MORE_DATA = 0x04
+    SOME_DATA = 0x03    # Seems related to lights off 0x2C bytes of data
+    MORE_DATA = 0x04    # Seems related to lights on
     GET_PROPERTY = 0x05
     SET_PROPERTY = 0x06
     READ_HELLA_DATA = 0x07
