@@ -2,10 +2,9 @@
 
 import sys
 from functools import partial
-from xml.etree import ElementTree
 from enum import Enum
 
-from pydbus import SessionBus
+from dbus import DBus
 
 from PyQt5.QtCore import QRect, QObject, pyqtSlot
 from PyQt5.QtWidgets import QApplication, QPushButton, QColorDialog
@@ -19,10 +18,6 @@ class Direction(Enum):
     ALT = True
 
 class Keyboard(QObject):
-    DBUS_PATH = '/com/qtech/openperipherals'
-    DBUS_SERVICE = 'com.qtech.openperipherals'
-    DBUS_INT_LEDS = DBUS_SERVICE + '.Leds'
-
     def __init__(self, parent=None):
         QObject.__init__(self, parent)
 
@@ -34,24 +29,13 @@ class Keyboard(QObject):
         self.effect_color = (255, 255, 255)
         self.color_dialog = QColorDialog()
 
-        self.bus = SessionBus()
-        tmp = self.get_devices()[0]
+        self.bus = DBus()
+        tmp = self.bus.get_devices()[0]
         print(f'Using service {tmp}')
-        self.kb_effect = self.bus.get(self.DBUS_SERVICE, self.DBUS_PATH + f'/{tmp}/effect')
-        self.kb_dimmable = self.bus.get(self.DBUS_SERVICE, self.DBUS_PATH + f'/{tmp}/dimmable')
-        self.kb_animation = self.bus.get(self.DBUS_SERVICE, self.DBUS_PATH + f'/{tmp}/animation')
-        self.kb_keyboard = self.bus.get(self.DBUS_SERVICE, self.DBUS_PATH + f'/{tmp}/keyboard')
-
-    def get_devices(self):
-        devices = []
-
-        service = self.bus.get(self.DBUS_SERVICE)
-        xml_str = service.Introspect()
-        for child in ElementTree.fromstring(xml_str):
-            if child.tag == 'node':
-                devices.append(child.attrib['name'])
-
-        return devices
+        self.kb_effect = self.bus.get_interface(tmp, 'effect')
+        self.kb_dimmable = self.bus.get_interface(tmp, 'dimmable')
+        self.kb_animation = self.bus.get_interface(tmp, 'animation')
+        self.kb_keyboard = self.bus.get_interface(tmp, 'keyboard')
 
     def pull_settings(self):
         effect = self.kb_effect.GetEffect()
