@@ -1,6 +1,6 @@
 import logging
 
-from pydbus import SessionBus
+from dbus import DBus
 from gi.repository import GLib
 from hid import enumerate, Device
 
@@ -13,9 +13,6 @@ PID = 0x5004
 
 
 class Backend:
-    DBUS_PATH = '/com/qtech/openperipherals'
-    DBUS_SERVICE = 'com.qtech.openperipherals'
-    DBUS_INT_LEDS = DBUS_SERVICE + '.Leds'
 
     def __init__(self):
         # Logging
@@ -28,16 +25,9 @@ class Backend:
         self.logger.addHandler(sh)
 
         # DBus
-        self.bus = SessionBus()
+        self.bus = DBus()
 
     def start(self):
-        try:
-            self.bus.request_name(self.DBUS_SERVICE)
-            self.bus.register_object(self.DBUS_PATH, DaemonInterface(), None)
-        except RuntimeError:
-            self.logger.exception('Failed to connect to DBus')
-            exit()
-
         # List keyboards
         kb_info = self.find_keyboard()
         print(kb_info)
@@ -45,11 +35,11 @@ class Backend:
         if kb_info is not None:
             self.logger.info(f'Connecting to keyboard at {kb_info["path"]}')
             rd = RedDragon(Device(path=kb_info['path']))
-            rd.join_bus(self.DBUS_PATH + f'/{kb_info["manufacturer_string"]}', self.bus)
+            rd.join_bus(kb_info['manufacturer_string'], self.bus)
         else:
             self.logger.info(f'Creating fake keyboard')
             fake = FakeKeyboard()
-            rd.join_bus(self.DBUS_PATH + f'/fake', self.bus)
+            rd.join_bus('fake', self.bus)
 
         # Start main loop
         GLib.MainLoop().run()
