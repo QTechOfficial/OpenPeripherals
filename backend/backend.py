@@ -45,11 +45,11 @@ class Backend:
         if kb_info is not None:
             self.logger.info(f'Connecting to keyboard at {kb_info["path"]}')
             rd = RedDragon(Device(path=kb_info['path']))
-            self.bus.register_object(self.DBUS_PATH + f'/{kb_info["manufacturer_string"]}', KeyboardInterface(rd), None)
+            rd.join_bus(self.DBUS_PATH + f'/{kb_info["manufacturer_string"]}', self.bus)
         else:
             self.logger.info(f'Creating fake keyboard')
             fake = FakeKeyboard()
-            self.bus.register_object(self.DBUS_PATH + '/fake', KeyboardInterface(fake), None)
+            rd.join_bus(self.DBUS_PATH + f'/fake', self.bus)
 
         # Start main loop
         GLib.MainLoop().run()

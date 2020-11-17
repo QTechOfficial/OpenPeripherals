@@ -10,6 +10,12 @@ class FakeKeyboard(Keyboard):
         self._effect_color = (0, 0, 0)
         self._colors = {}
 
+    def join_bus(self, path, bus):
+        bus.register_object(f'{path}/effect', EffectInterface(self), None)
+        bus.register_object(f'{path}/dimmable', DimmableInterface(self), None)
+        bus.register_object(f'{path}/animation', AnimationInterface(self), None)
+        bus.register_object(f'{path}/keyboard', KeyboardInterface(self), None)
+
     def set_effect(self, val):
         # TODO: Check argument
         self._effect = val

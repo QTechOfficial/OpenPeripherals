@@ -1,6 +1,9 @@
 from abc import ABC
 
 class Keyboard(ABC):
+    def join_bus(self, bus):
+        pass
+
     def set_effect(self, val):
         pass
 

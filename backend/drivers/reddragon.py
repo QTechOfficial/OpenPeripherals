@@ -1,5 +1,7 @@
 from .keyboard import Keyboard
 
+from interfaces import *
+
 def phex(data):
     print(' '.join([hex(d) for d in data]))
 
@@ -59,6 +61,12 @@ class RedDragon(Keyboard):
         resp = self.write_packet(Commands.GET_PROPERTY, size, prop_id)
         self.write_packet(Commands.END_BLOCK)
         return resp
+
+    def join_bus(self, path, bus):
+        bus.register_object(f'{path}/effect', EffectInterface(self), None)
+        bus.register_object(f'{path}/dimmable', DimmableInterface(self), None)
+        bus.register_object(f'{path}/animation', AnimationInterface(self), None)
+        bus.register_object(f'{path}/keyboard', KeyboardInterface(self), None)
 
     def set_effect(self, effect):
         # TODO: Check argument
