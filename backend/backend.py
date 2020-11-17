@@ -12,7 +12,7 @@ VID = 0x0c45
 PID = 0x5004
 
 
-class KbDaemon:
+class Backend:
     DBUS_PATH = '/com/qtech/openperipherals'
     DBUS_SERVICE = 'com.qtech.openperipherals'
     DBUS_INT_LEDS = DBUS_SERVICE + '.Leds'
@@ -66,5 +66,5 @@ class KbDaemon:
 
 
 if __name__ == '__main__':
-    daemon = KbDaemon()
-    daemon.start()
+    backend = Backend()
+    backend.start()
