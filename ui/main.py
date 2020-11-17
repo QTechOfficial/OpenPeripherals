@@ -37,7 +37,10 @@ class Keyboard(QObject):
         self.bus = SessionBus()
         tmp = self.get_devices()[0]
         print(f'Using service {tmp}')
-        self.kb_leds = self.bus.get(self.DBUS_SERVICE, self.DBUS_PATH + f'/{tmp}')
+        self.kb_effect = self.bus.get(self.DBUS_SERVICE, self.DBUS_PATH + f'/{tmp}/effect')
+        self.kb_dimmable = self.bus.get(self.DBUS_SERVICE, self.DBUS_PATH + f'/{tmp}/dimmable')
+        self.kb_animation = self.bus.get(self.DBUS_SERVICE, self.DBUS_PATH + f'/{tmp}/animation')
+        self.kb_keyboard = self.bus.get(self.DBUS_SERVICE, self.DBUS_PATH + f'/{tmp}/keyboard')
 
     def get_devices(self):
         devices = []
@@ -51,13 +54,13 @@ class Keyboard(QObject):
         return devices
 
     def pull_settings(self):
-        effect = self.kb_leds.GetEffect()
-        brightness = self.kb_leds.GetBrightness()
-        speed = self.kb_leds.GetSpeed()
-        direction = self.kb_leds.GetDirection()
-        rainbow = self.kb_leds.GetRainbow()
-        effect_color = self.kb_leds.GetEffectColor()
-        key_colors = self.kb_leds.GetAllColors()
+        effect = self.kb_effect.GetEffect()
+        brightness = self.kb_dimmable.GetBrightness()
+        speed = self.kb_animation.GetSpeed()
+        direction = self.kb_animation.GetDirection()
+        rainbow = self.kb_effect.GetRainbow()
+        effect_color = self.kb_effect.GetEffectColor()
+        key_colors = self.kb_keyboard.GetAllColors()
 
         self.ui.set_effect.setCurrentIndex(effect)
         self.ui.set_brightness.setValue(brightness)
@@ -78,26 +81,26 @@ class Keyboard(QObject):
 
     @pyqtSlot(int)
     def on_set_brightness(self, val):
-        self.kb_leds.SetBrightness(val)
+        self.kb_dimmable.SetBrightness(val)
 
     @pyqtSlot(int)
     def on_set_effect(self, val):
-        self.kb_leds.SetEffect(val)
+        self.kb_effect.SetEffect(val)
 
     @pyqtSlot(int)
     def on_set_speed(self, val):
-        self.kb_leds.SetSpeed(val)
+        self.kb_animation.SetSpeed(val)
 
     @pyqtSlot(int)
     def on_set_rainbow(self, val):
-        self.kb_leds.SetRainbow(val > 0)
+        self.kb_effect.SetRainbow(val > 0)
 
     @pyqtSlot()
     def on_direction_toggled(self):
         if self.ui.direction_main.isChecked():
-            self.kb_leds.SetDirection(Direction.MAIN.value)
+            self.kb_animation.SetDirection(Direction.MAIN.value)
         elif self.ui.direction_alt.isChecked():
-            self.kb_leds.SetDirection(Direction.ALT.value)
+            self.kb_animation.SetDirection(Direction.ALT.value)
 
     @pyqtSlot()
     def on_set_all(self):
@@ -106,7 +109,7 @@ class Keyboard(QObject):
             set_button_color(key.button, self.active_color)
             color_data[key_id] = self.active_color
 
-        self.kb_leds.SetAllColors(color_data)
+        self.kb_keyboard.SetAllColors(color_data)
 
     @pyqtSlot()
     def on_change_primary_color(self):
@@ -119,11 +122,11 @@ class Keyboard(QObject):
         col = self.color_dialog.getColor()
         self.effect_color = (col.red(), col.green(), col.blue())
         set_button_color(self.ui.set_effect_color, self.effect_color)
-        self.kb_leds.SetEffectColor(self.effect_color)
+        self.kb_effect.SetEffectColor(self.effect_color)
 
     @pyqtSlot(str, tuple)
     def on_set_key_color(self, key_id):
-        self.kb_leds.SetKeyColor(key_id, self.active_color)
+        self.kb_keyboard.SetKeyColor(key_id, self.active_color)
         self.keys[key_id].set_color(self.active_color)
 
     def connect_buttons(self):
