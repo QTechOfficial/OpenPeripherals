@@ -1,11 +1,12 @@
+from led import Led
 from utils import set_button_color
 
-class Key:
+class Key(Led):
     def __init__(self, name, button, led_offset):
+        Led.__init__(self)
         self.name = name
         self.button = button
         self.led_offset = led_offset
-        self.color = (255, 255, 255)
 
     def set_color(self, color):
         self.color = color
