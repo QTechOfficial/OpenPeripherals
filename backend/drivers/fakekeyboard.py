@@ -1,4 +1,6 @@
-class FakeKeyboard:
+from .keyboard import Keyboard
+
+class FakeKeyboard(Keyboard):
     def __init__(self):
         self._brightness = 0
         self._effect = 0

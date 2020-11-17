@@ -1,3 +1,5 @@
+from .keyboard import Keyboard
+
 def phex(data):
     print(' '.join([hex(d) for d in data]))
 
@@ -28,7 +30,7 @@ class Properties:
     SOME_COLOR = 0x09
 
 
-class RedDragon:
+class RedDragon(Keyboard):
     def __init__(self, hid):
         self._hid = hid
         self.magic_dict = {'ESCAPE': 0, 'F1': 3, 'F2': 6, 'F3': 9, 'F4': 12, 'F5': 15, 'F6': 18, 'F7': 21, 'F8': 24, 'F9': 27, 'F10': 30, 'F11': 33, 'F12': 36, 'PRTSC': 42, 'SCLK': 45, 'PAUSE': 48, 'GRAVE': 63, '1': 66, '2': 69, '3': 72, '4': 75, '5': 78, '6': 81, '7': 84, '8': 87, '9': 90, '0': 93, 'MINUS': 96, 'EQUALS': 99, 'BACK': 102, 'INSERT': 105, 'HOME': 108, 'PGUP': 111, 'TAB': 126, 'Q': 129, 'W': 132, 'E': 135, 'R': 138, 'T': 141, 'Y': 144, 'U': 147, 'I': 150, 'O': 153, 'P': 156, 'LBRACKET': 159, 'RBRACKET': 162, 'RETURN': 228, 'DEL': 168, 'END': 171, 'PGDN': 174, 'CAPSLK': 189, 'A': 192, 'S': 195, 'D': 198, 'F': 201, 'G': 204, 'H': 207, 'J': 210, 'K': 213, 'L': 216, 'SEMICOLON': 219, 'APOSTROPHE': 222, 'BACKSLASH': 165, 'SHIFT': 252, 'Z': 258, 'X': 261, 'C': 264, 'V': 267, 'B': 270, 'N': 273, 'M': 276, 'COMMA': 279, 'PERIOD': 282, 'SLASH': 285, 'RSHIFT': 291, 'CONTROL': 315, 'META': 318, 'ALT': 321, 'SPACE': 324, 'RALT': 327, 'FN': 330, 'APP': 333, 'RCONTROL': 339, 'NUMLOCK': 114, 'NUMSLASH': 117, 'NUMSTAR': 120, 'NUMMINUS': 123, 'NUM7': 177, 'NUM8': 180, 'NUM9': 183, 'NUM4': 240, 'NUM5': 243, 'NUM6': 246, 'NUMPLUS': 186, 'NUM1': 303, 'NUM2': 306, 'NUM3': 309, 'NUM0': 369, 'NUMPERIOD': 372, 'NUMENTER': 312, 'UP': 297, 'LEFT': 357, 'DOWN': 360, 'RIGHT': 363}
